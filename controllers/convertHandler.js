@@ -1,13 +1,62 @@
 function ConvertHandler() {
+  const splitToNumberAndMeasure = (input) => {
+    let left = "";
+    let right = "";
   
-  this.getNum = function(input) {
-    let result;
+    for (const char of input) {
+      if ((char >= 0 && char <= 9) || (char == ".") || (char == "/")) {
+        left += char;
+      } else {
+        right += char;
+      }
+    }
+  
+    // count number of "/"
+    let count = 0;
+    for (const char of left) {
+      if (char == "/") {
+        count += 1;
+      }
+    }
+  
+    if (count > 1) {
+      return [undefined, right]
+    }
+  
+    // convert "/" to decimal
+    let top = "";
+    let bot = "";
+    let onLeftSide = true;
+    for (const char of left) {
+      if (char == "/") {
+        onLeftSide = false;
+      } else {
+        if (onLeftSide) {
+          top += char;
+        } else {
+          bot += char;
+        }
+      }
+    }
     
+    if (bot) {
+      left = Number(top / bot);
+    } else {
+      left = Number(top);
+    }
+    return [left, right];
+  }
+
+  this.getNum = function(input) {
+    const arr = splitToNumberAndMeasure(input);
+    const result = arr[0];
+
     return result;
   };
   
   this.getUnit = function(input) {
-    let result;
+    const arr = splitToNumberAndMeasure(input);
+    const result = arr[1];
     
     return result;
   };
