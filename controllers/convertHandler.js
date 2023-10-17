@@ -60,14 +60,18 @@ function ConvertHandler() {
   };
   
   this.getUnit = function(input) {
-    const result = splitToNumberAndUnit(input)[1];
+    const result = splitToNumberAndUnit(input)[1].toLowerCase();
 
-    const units = ['gal', 'L', 'mi', 'km', 'lbs', 'kg'];
+    const units = ['gal', 'l', 'mi', 'km', 'lbs', 'kg'];
     if (!units.includes(result)) {
       return undefined;
     }
     
-    return result;
+    if (result == "l") {
+      return "L";
+    } else {
+      return result;
+    }
   };
   
   this.getReturnUnit = function(initUnit) {
@@ -75,13 +79,13 @@ function ConvertHandler() {
 
     const returnUnits = {};
     returnUnits['gal'] = 'L';
-    returnUnits['L'] = 'gal';
+    returnUnits['l'] = 'gal';
     returnUnits['mi'] = 'km';
     returnUnits['km'] = 'mi';
     returnUnits['lbs'] = 'kg';
     returnUnits['kg'] = 'lbs';
 
-    result = returnUnits[initUnit];
+    result = returnUnits[initUnit.toLowerCase()];
 
     return result;
   };
@@ -91,13 +95,13 @@ function ConvertHandler() {
 
     const spellUnits = {};
     spellUnits['gal'] = 'gallons';
-    spellUnits['L'] = 'liters';
+    spellUnits['l'] = 'liters';
     spellUnits['mi'] = 'miles';
     spellUnits['km'] = 'kilometers';
     spellUnits['lbs'] = 'pounds';
     spellUnits['kg'] = 'kilograms';
 
-    result = spellUnits[unit];
+    result = spellUnits[unit.toLowerCase()];
     
     return result;
   };
@@ -109,28 +113,29 @@ function ConvertHandler() {
 
     const convertUnits = {};
     convertUnits['gal'] = galToL;
-    convertUnits['L'] = 1 / galToL;
+    convertUnits['l'] = 1 / galToL;
     convertUnits['mi'] = miToKm;
     convertUnits['km'] = 1 / miToKm;
     convertUnits['lbs'] = lbsToKg;
     convertUnits['kg'] = 1 / lbsToKg;
 
-    const coef = convertUnits[initUnit];
+    const coef = convertUnits[initUnit.toLowerCase()];
     if (coef) {
-      return initNum * coef;
+      return Math.round(100000*initNum * coef) / 100000;
     } else {
       return undefined;
     }
   };
   
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-    return `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum} ${this.spellOutUnit(returnUnit)}`;
+    return `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum.toFixed(5)} ${this.spellOutUnit(returnUnit)}`;
   };
   
 }
 
 module.exports = ConvertHandler;
 
+// ===================================================
 // let convertHandler = new ConvertHandler();
 // console.log(convertHandler.getNum("1/2.5kg"));
 // console.log(convertHandler.getUnit("2kg"));
@@ -139,3 +144,4 @@ module.exports = ConvertHandler;
 // console.log(convertHandler.convert(10, "gal"));
 // console.log(convertHandler.convert(100, "gal"));
 // console.log(convertHandler.getString(100, "gal", 378, "L"));
+// console.log(convertHandler.getString(100, "gal", 378.54100, "L"));
