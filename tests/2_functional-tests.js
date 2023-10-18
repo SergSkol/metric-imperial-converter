@@ -11,6 +11,7 @@ suite('Functional Tests', function() {
       .request(server)
       .get("/api/convert?input=10L")
       .end((err, res) => {
+        assert.equal(res.status, 200);
         assert.approximately(res.body.returnNum, 2.64, 0.01);
         assert.equal(res.body.returnUnit, "gal");
         done();
@@ -22,6 +23,7 @@ suite('Functional Tests', function() {
       .request(server)
       .get("/api/convert?input=32g")
       .end((err, res) => {
+        assert.equal(res.status, 200);
         assert.equal(res.body.returnUnit, undefined);
         done();
       });
@@ -32,6 +34,7 @@ suite('Functional Tests', function() {
       .request(server)
       .get("/api/convert?input=3/7.2/4kg")
       .end((err, res) => {
+        assert.equal(res.status, 200);
         assert.equal(res.body.returnNum, undefined);
         done();
       });
@@ -42,6 +45,7 @@ suite('Functional Tests', function() {
       .request(server)
       .get("/api/convert?input=3/7.2/4kilomegagram")
       .end((err, res) => {
+        assert.equal(res.status, 200);
         assert.equal(res.body.returnNum, undefined);
         assert.equal(res.body.returnUnit, undefined);
         done();
@@ -53,6 +57,7 @@ suite('Functional Tests', function() {
       .request(server)
       .get("/api/convert?input=kg")
       .end((err, res) => {
+        assert.equal(res.status, 200);
         assert.approximately(res.body.returnNum, 2.20, 0.01);
         assert.equal(res.body.returnUnit, "lbs");
         done();
